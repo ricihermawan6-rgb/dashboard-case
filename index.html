@@ -4310,40 +4310,7 @@ function deletePHK(id) {
     <div class="modal-foot">
       <button class="btn btn-ghost" onclick="openEditPHKModal(currentPHKId)">✏️ Edit</button>
       <button class="btn btn-ghost" onclick="closeModal('detailPHKModal')">Tutup</button>
-<script>
-const supabase = window.supabase.createClient(
-  "https://atorjhxwokqghfkykqeg.supabase",",
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF0b3JqaHh3b2txZ2hma3lrcWVnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU3NDA1ODgsImV4cCI6MjA5MTMxNjU4OH0.-Bjdrs87-CAdCdRMISB86z2sotfK4lb6phn2Zoad86E"
-);
-
-alert("Supabase sudah connect");
 </script>
 </body>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
-
-<script>
-const supabase = window.supabase.createClient(
-  "https://atorjhxwokqghfkykqeg.supabase.co",
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF0b3JqaHh3b2txZ2hma3lrcWVnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU3NDA1ODgsImV4cCI6MjA5MTMxNjU4OH0.-Bjdrs87-CAdCdRMISB86z2sotfK4lb6phn2Zoad86E"
-);
-
-alert("Supabase sudah connect");
-</script>
-<textarea id="inputData" oninput="simpanData()" placeholder="Tulis data di sini..." style="width:100%;height:100px;"></textarea>
-</body>
-<script>
-function simpanData() {
-  const data = document.getElementById("inputData").value;
-  localStorage.setItem("dataDashboard", data);
-}
-
-function loadData() {
-  const data = localStorage.getItem("dataDashboard");
-  if (data) {
-    document.getElementById("inputData").value = data;
-  }
-}
-
-window.onload = loadData;
 </script>
 </html>
