@@ -1,0 +1,119 @@
+<!DOCTYPE html><html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CaseTrack Enterprise+</title>
+<style>
+:root{--bg:#0a0d14;--card:#111520;--accent:#e8c547;--text:#fff;--muted:#888}
+body{margin:0;font-family:Arial;background:var(--bg);color:var(--text)}
+.hidden{display:none}
+.container{padding:20px}
+input,select,button{padding:8px;border-radius:6px;border:none;margin:4px}
+button{background:var(--accent);color:#000;cursor:pointer}
+table{width:100%;border-collapse:collapse;margin-top:10px}
+th,td{padding:10px;border-bottom:1px solid #333}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.8);display:none;align-items:center;justify-content:center}
+.modal.show{display:flex}
+.modal-box{background:#111520;padding:20px;border-radius:10px;width:300px}
+</style>
+</head>
+<body><div id="loginPage" class="container">
+<h2>Login</h2>
+<input id="user" placeholder="Username">
+<input id="pass" type="password" placeholder="Password">
+<button onclick="login()">Login</button>
+</div><div id="app" class="hidden container">
+<h2>CaseTrack System</h2><input id="name" placeholder="Nama kasus">
+<select id="status">
+<option>Open</option>
+<option>Progress</option>
+<option>Closed</option>
+</select>
+<input type="file" id="file">
+<button onclick="addCase()">Tambah</button><table>
+<thead><tr><th>ID</th><th>Nama</th><th>Status</th><th>File</th><th>Aksi</th></tr></thead>
+<tbody id="tbody"></tbody>
+</table>
+</div><!-- MODAL EDIT --><div id="modal" class="modal">
+<div class="modal-box">
+<h3>Edit Case</h3>
+<input id="editName">
+<select id="editStatus">
+<option>Open</option>
+<option>Progress</option>
+<option>Closed</option>
+</select>
+<button onclick="saveEdit()">Simpan</button>
+</div>
+</div><script>
+let cases=[];
+let editIndex=null;
+
+function login(){
+ let u=document.getElementById('user').value;
+ let p=document.getElementById('pass').value;
+ if(u==='admin' && p==='123'){
+  document.getElementById('loginPage').classList.add('hidden');
+  document.getElementById('app').classList.remove('hidden');
+  load();render();
+ } else alert('login salah');
+}
+
+function load(){
+ let d=localStorage.getItem('cases');
+ if(d) cases=JSON.parse(d);
+}
+function save(){localStorage.setItem('cases',JSON.stringify(cases));}
+
+function addCase(){
+ let name=document.getElementById('name').value;
+ let status=document.getElementById('status').value;
+ let file=document.getElementById('file').files[0];
+
+ let fileName = file ? file.name : '-';
+
+ cases.push({id:'CASE-'+Date.now(),name,status,file:fileName});
+ save();render();
+ document.getElementById('name').value='';
+}
+
+function render(){
+ let tb=document.getElementById('tbody');tb.innerHTML='';
+ cases.forEach((c,i)=>{
+  tb.innerHTML+=`<tr onclick="detail(${i})">
+  <td>${c.id}</td>
+  <td>${c.name}</td>
+  <td>${c.status}</td>
+  <td>${c.file}</td>
+  <td>
+    <button onclick="event.stopPropagation();edit(${i})">Edit</button>
+    <button onclick="event.stopPropagation();del(${i})">Hapus</button>
+  </td>
+  </tr>`;
+ });
+}
+
+function del(i){
+ if(!confirm('hapus?'))return;
+ cases.splice(i,1);save();render();
+}
+
+function edit(i){
+ editIndex=i;
+ document.getElementById('editName').value=cases[i].name;
+ document.getElementById('editStatus').value=cases[i].status;
+ document.getElementById('modal').classList.add('show');
+}
+
+function saveEdit(){
+ cases[editIndex].name=document.getElementById('editName').value;
+ cases[editIndex].status=document.getElementById('editStatus').value;
+ save();render();
+ document.getElementById('modal').classList.remove('show');
+}
+
+function detail(i){
+ alert(`Detail:\nID: ${cases[i].id}\nNama: ${cases[i].name}\nStatus: ${cases[i].status}\nFile: ${cases[i].file}`);
+}
+</script></body>
+</html>
