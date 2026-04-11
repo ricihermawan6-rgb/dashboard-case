@@ -4324,7 +4324,7 @@ const supabaseClient = createClient(
 // TEST
 async function test() {
   const { data, error } = await supabaseClient
-    .from('profiles')
+    .from('profil')
     .select('*')
 
   if (error) {
