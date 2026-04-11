@@ -1,0 +1,57 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg: #0a0d14;
+  --surface: #111520;
+  --surface2: #171d2e;
+  --border: #1e2740;
+  --accent: #e8c547;
+  --accent2: #4e9af1;
+  --danger: #f1654e;
+  --success: #4ecf8a;
+  --warning: #f1a94e;
+  --text: #e8eaf2;
+  --muted: #6b7494;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  min-height: 100vh;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--surface); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--muted); }
+
+/* Table row flash animation */
+@keyframes rowFlash {
+  0%   { background-color: rgba(232,197,71,.18); }
+  100% { background-color: transparent; }
+}
+.row-flash { animation: rowFlash 2.5s ease forwards; }
+
+/* Toast */
+@keyframes toastIn  { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+@keyframes toastOut { from { opacity:1; transform:translateY(0); } to { opacity:0; transform:translateY(8px); } }
+.toast-in  { animation: toastIn  .25s ease; }
+.toast-out { animation: toastOut .25s ease forwards; }
+
+/* Modal backdrop */
+.modal-backdrop { backdrop-filter: blur(4px); }
+
+/* Status badge pulse for active cases */
+@keyframes statusPulse { 0%,100%{opacity:1} 50%{opacity:.6} }
+.status-pulse { animation: statusPulse 2s infinite; }
+
+/* Autosave badge */
+@keyframes autosavePulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+.autosave-dot { animation: autosavePulse 1.5s infinite; }
