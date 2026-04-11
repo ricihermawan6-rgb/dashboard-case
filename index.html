@@ -4311,49 +4311,6 @@ function deletePHK(id) {
       <button class="btn btn-ghost" onclick="openEditPHKModal(currentPHKId)">✏️ Edit</button>
       <button class="btn btn-ghost" onclick="closeModal('detailPHKModal')">Tutup</button>
 </script>
-      <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>
-const supabaseClient = supabase.createClient(
-  "https://atorjhxwokqghfkykqeg.supabase.co",
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF0b3JqaHh3b2txZ2hma3lrcWVnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU3NDA1ODgsImV4cCI6MjA5MTMxNjU4OH0.-Bjdrs87-CAdCdRMISB86z2sotfK4lb6phn2Zoad86E"
-);
-
-// 🔥 LOAD DATA
-async function loadData() {
-  const { data, error } = await supabaseClient
-    .from('kasus')
-    .select('*');
-
-  console.log("DATA:", data);
-
-  if (data) {
-    alert("Data berhasil diambil: " + data.length);
-  }
-}
-
-// 🔥 TAMBAH DATA
-async function tambahData() {
-  const { error } = await supabaseClient
-    .from('kasus')
-    .insert([
-      {
-        empId: "EMP001",
-        name: "Budi",
-        dept: "Produksi",
-        type: "SP1",
-        status: "open"
-      }
-    ]);
-
-  if (error) {
-    alert("❌ " + error.message);
-  } else {
-    alert("✅ Data masuk");
-  }
-}
-</script>
-      <button onclick="loadData()">LOAD DATA</button>
-<button onclick="tambahData()">TAMBAH DATA</button>
 </body>
 </script>
 </html>
