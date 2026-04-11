@@ -4311,6 +4311,31 @@ function deletePHK(id) {
       <button class="btn btn-ghost" onclick="openEditPHKModal(currentPHKId)">✏️ Edit</button>
       <button class="btn btn-ghost" onclick="closeModal('detailPHKModal')">Tutup</button>
 </script>
+      <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+
+<script>
+const { createClient } = supabase
+
+const supabaseClient = createClient(
+  "https://atorjhxwokqghfkykqeg.supabase.co",
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF0b3JqaHh3b2txZ2hma3lrcWVnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU3NDA1ODgsImV4cCI6MjA5MTMxNjU4OH0.-Bjdrs87-CAdCdRMISB86z2sotfK4lb6phn2Zoad86E"
+)
+
+// TEST
+async function test() {
+  const { data, error } = await supabaseClient
+    .from('profiles')
+    .select('*')
+
+  if (error) {
+    console.log("❌ ERROR:", error.message)
+  } else {
+    console.log("✅ DATA:", data)
+  }
+}
+
+test()
+</script>
 </body>
 </script>
 </html>
