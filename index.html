@@ -4336,6 +4336,41 @@ async function test() {
 
 test()
 </script>
+      <script>
+async function importDataMassal() {
+  const data = [
+    {
+      empId: "EMP001",
+      name: "Budi Santoso",
+      dept: "Produksi",
+      type: "SP1",
+      severity: "medium",
+      status: "open"
+    },
+    {
+      empId: "EMP002",
+      name: "Siti Rahma",
+      dept: "HR",
+      type: "SP2",
+      severity: "high",
+      status: "open"
+    }
+  ]
+
+  const { error } = await supabaseClient
+    .from('kasus') // ⚠️ sesuaikan dengan tabel lu
+    .insert(data)
+
+  if (error) {
+    console.log("❌ ERROR:", error.message)
+    alert("Gagal import")
+  } else {
+    console.log("✅ IMPORT BERHASIL")
+    alert("Data berhasil masuk semua")
+  }
+}
+</script>
+      <button onclick="importDataMassal()">IMPORT DATA LAMA</button>
 </body>
 </script>
 </html>
