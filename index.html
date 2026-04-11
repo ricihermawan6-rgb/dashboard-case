@@ -4311,59 +4311,6 @@ function deletePHK(id) {
       <button class="btn btn-ghost" onclick="openEditPHKModal(currentPHKId)">✏️ Edit</button>
       <button class="btn btn-ghost" onclick="closeModal('detailPHKModal')">Tutup</button>
 </script>
-<script>
-if (!window.supabaseClient) {
-  window.supabaseClient = window.supabase.createClient(
-    "https://atorjhxwokqghfkykqeg.supabase.co",
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF0b3JqaHh3b2txZ2hma3lrcWVnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU3NDA1ODgsImV4cCI6MjA5MTMxNjU4OH0.-Bjdrs87-CAdCdRMISB86z2sotfK4lb6phn2Zoad86E"
-  )
-}
-
-const supabase = window.supabaseClient
-</script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
-
-<script>
-const supabase = window.supabase.createClient(
-  "https://atorjhxwokqghfkykqeg.supabase.co",
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF0b3JqaHh3b2txZ2hma3lrcWVnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU3NDA1ODgsImV4cCI6MjA5MTMxNjU4OH0.-Bjdrs87-CAdCdRMISB86z2sotfK4lb6phn2Zoad86E"
-)
-
-// ======================
-// LOAD DATA KE DASHBOARD
-// ======================
-async function loadProfiles() {
-  const { data, error } = await supabase
-    .from('profiles')
-    .select('*')
-
-  if (error) {
-    console.log("ERROR:", error.message)
-    return
-  }
-
-  console.log("DATA:", data)
-
-  // contoh tampilkan ke table (simple dulu)
-  const table = document.querySelector("table tbody")
-  if (!table) return
-
-  table.innerHTML = ""
-
-  data.forEach(item => {
-    const row = `
-      <tr>
-        <td>${item.name || '-'}</td>
-        <td>${item.email || '-'}</td>
-        <td>${item.role || '-'}</td>
-      </tr>
-    `
-    table.innerHTML += row
-  })
-}
-
-loadProfiles()
-</script>
 </body>
 </script>
 </html>
