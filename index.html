@@ -2909,7 +2909,87 @@ function inlineStatusChange(id, newStatus) {
   addLog('UPDATE', `Status kasus ${id}: ${old} → ${newStatus}`);
   showToast(`Status ${id} → ${newStatus}`, 'success');
 }
+<script>
+const SUPABASE_URL = "ISI_URL_LO";
+const SUPABASE_KEY = "ISI_KEY_LO";
 
+const supabaseClient = supabase.createClient("https://atorjhxwokqghfkykqeg.supabase.co", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF0b3JqaHh3b2txZ2hma3lrcWVnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU3NDA1ODgsImV4cCI6MjA5MTMxNjU4OH0.-Bjdrs87-CAdCdRMISB86z2sotfK4lb6phn2Zoad86E";
+
+// 🔥 LOAD DATA KE UI LO
+async function loadCasesFromDB() {
+  const { data, error } = await supabaseClient
+    .from('cases')
+    .select('*')
+    .order('created_at', { ascending: false });
+
+  if (error) {
+    console.error(error);
+    alert("Gagal load data");
+    return;
+  }
+
+  // 🔥 mapping ke struktur UI lo
+  cases = data.map(d => ({
+    id: d.id,
+    name: d.name,
+    empId: d.emp_id,
+    type: d.type || '-',
+    dept: d.dept || '-',
+    severity: d.severity || '-',
+    status: d.status || 'Aktif',
+    date: new Date(d.created_at).toLocaleDateString('id-ID')
+  }));
+
+  filteredCases = [...cases];
+
+  if (typeof renderTable === "function") {
+    renderTable();
+  }
+}
+
+// 🔥 TAMBAH DATA (INI YANG NGGANTI addCase LO)
+async function addCase() {
+  const name = document.getElementById('f_name')?.value.trim();
+  const empId = document.getElementById('f_empid')?.value.trim();
+
+  if (!name || !empId) {
+    alert("Nama & ID wajib diisi");
+    return;
+  }
+
+  const payload = {
+    name: name,
+    emp_id: empId,
+    type: document.getElementById('f_type')?.value || null,
+    dept: document.getElementById('f_dept')?.value || null,
+    severity: document.getElementById('f_severity')?.value || null
+  };
+
+  const { error } = await supabaseClient.from('cases').insert([payload]);
+
+  if (error) {
+    console.error(error);
+    alert("Gagal simpan ke database");
+    return;
+  }
+
+  alert("Kasus berhasil ditambahkan!");
+
+  loadCasesFromDB();
+}
+
+// 🔥 DELETE FIX
+async function deleteCase(id) {
+  if (!confirm("Hapus data ini?")) return;
+
+  await supabaseClient.from('cases').delete().eq('id', id);
+
+  loadCasesFromDB();
+}
+
+// 🔥 INIT
+loadCasesFromDB();
+</script>
 // =============================================
 // ADD CASE
 // =============================================
@@ -4816,5 +4896,6 @@ function toggleSidebar() {
     <div class="modal-foot"><button class="btn btn-ghost" onclick="closeModal('dtEntryModal')">Batal</button><button class="btn btn-primary" onclick="saveDTEntry()">Simpan</button></div>
   </div>
 </div>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 </body>
 </html>
