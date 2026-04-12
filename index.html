@@ -4896,7 +4896,65 @@ function toggleSidebar() {
     <div class="modal-foot"><button class="btn btn-ghost" onclick="closeModal('dtEntryModal')">Batal</button><button class="btn btn-primary" onclick="saveDTEntry()">Simpan</button></div>
   </div>
 </div>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+  <!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login - CaseTrack</title>
+
+<style>
+body {
+  background: #0a0d14;
+  color: white;
+  font-family: Arial;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.box {
+  background: #111520;
+  padding: 30px;
+  border-radius: 12px;
+  width: 300px;
+  text-align: center;
+}
+
+input {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  border-radius: 6px;
+  border: none;
+}
+
+button {
+  width: 100%;
+  padding: 10px;
+  background: gold;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+}
+</style>
+</head>
+
+<body>
+
+<div class="box">
+  <h2>CaseTrack Login</h2>
+
+  <input id="username" placeholder="Username">
+  <input id="password" type="password" placeholder="Password">
+
+  <button onclick="login()">Masuk</button>
+</div>
+
+<!-- SUPABASE -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 
 <script>
 const supabase = window.supabase.createClient(
@@ -4925,6 +4983,8 @@ async function login() {
   }
 
   alert("Login berhasil: " + data.name);
+
+  // pindah ke dashboard
   window.location.href = "index.html";
 }
 </script>
