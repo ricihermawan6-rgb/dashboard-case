@@ -4311,51 +4311,6 @@ function deletePHK(id) {
       <button class="btn btn-ghost" onclick="openEditPHKModal(currentPHKId)">✏️ Edit</button>
       <button class="btn btn-ghost" onclick="closeModal('detailPHKModal')">Tutup</button>
 </script>
-      <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-<script>
-const supabase = window.supabase.createClient(
-  "atorjhxwokqghfkykqeg",
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF0b3JqaHh3b2txZ2hma3lrcWVnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU3NDA1ODgsImV4cCI6MjA5MTMxNjU4OH0.-Bjdrs87-CAdCdRMISB86z2sotfK4lb6phn2Zoad86E"
-);
-
-// SIMPAN DATA
-async function simpan() {
-  const nama = document.getElementById("nama").value;
-  const kasus = document.getElementById("kasus").value;
-
-  const { error } = await supabase
-    .from("cases")
-    .insert([{ nama, kasus, status: "open" }]);
-
-  if (error) {
-    alert("Gagal");
-  } else {
-    alert("Berhasil");
-    loadData();
-  }
-}
-
-// LOAD DATA
-async function loadData() {
-  const { data } = await supabase
-    .from("cases")
-    .select("*");
-
-  let isi = "";
-
-  data.forEach(d => {
-    isi += `<tr>
-      <td>${d.nama}</td>
-      <td>${d.kasus}</td>
-      <td>${d.status}</td>
-    </tr>`;
-  });
-
-  document.getElementById("tableBody").innerHTML = isi;
-}
-
-loadData();
 </script>
 </body>
 </script>
