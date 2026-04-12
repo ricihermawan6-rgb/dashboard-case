@@ -4897,5 +4897,35 @@ function toggleSidebar() {
   </div>
 </div>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+
+<script>
+async function login() {
+  const username = document.getElementById('username').value;
+  const password = document.getElementById('password').value;
+
+  if (!username || !password) {
+    alert("Isi username & password");
+    return;
+  }
+
+  const { data, error } = await supabase
+    .from('profiles')
+    .select('*')
+    .eq('username', username)
+    .single();
+
+  if (error || !data) {
+    alert("User tidak ditemukan");
+    return;
+  }
+
+  alert("Login berhasil: " + data.name);
+
+  window.location.href = "index.html";
+}
+</script>
+
+</body>
 </body>
 </html>
