@@ -2924,48 +2924,39 @@ function openAddModal() {
   document.getElementById('addModal').classList.add('show');
 }
 
-function addCase() {
-  const name=document.getElementById('f_name').value.trim();
-  const empId=document.getElementById('f_empid').value.trim();
-  if(!name||!empId){showToast('Nama dan ID wajib diisi','error');return;}
+async function addCase() {
+  const name = document.getElementById('f_name').value.trim();
+  const empId = document.getElementById('f_empid').value.trim();
+
+  if (!name || !empId) {
+    showToast('Nama dan ID wajib diisi','error');
+    return;
+  }
+
   const newCase = {
-    id:'CSE-2026-'+String(cases.length+29).padStart(3,'0'),
-    name, empId,
+    nama: name,
+    employee_id: empId,
     type: document.getElementById('f_type').value,
-    dept: document.getElementById('f_dept').value||'-',
+    dept: document.getElementById('f_dept').value || '-',
     casetype: document.getElementById('f_casetype').value,
     severity: document.getElementById('f_severity').value,
-    status:'Aktif', sp:null,
-    date: new Date().toLocaleDateString('id-ID',{day:'2-digit',month:'short',year:'numeric'}),
-    lastUpdate: new Date().toLocaleDateString('id-ID',{day:'2-digit',month:'short',year:'numeric'}),
-    pic: document.getElementById('f_pic').value||currentUser.name,
-    desc: document.getElementById('rteDesc').innerHTML||'-',
-    updates:[{text:'Kasus dibuka dan didaftarkan ke sistem.', time:now(), color:'var(--danger)'}],
-    docs: [...pendingFiles.addDocs],
-    photos: [...pendingFiles.addPhotos],
+    status: 'Aktif',
+    pic: document.getElementById('f_pic').value || currentUser.name,
+    desc: document.getElementById('rteDesc').innerHTML || '-'
   };
-  cases.unshift(newCase);
-  filteredCases=[...cases];
-  renderTable();
-  closeModal('addModal');
-  showToast('Kasus '+newCase.id+' berhasil ditambahkan','success');
-  addLog('CREATE','Membuat kasus '+newCase.id+' — '+name);
-  updateBadges();
-}
 
-function deleteCase(id) {
-  if(!hasPermission('deleteCase')) { showToast('Akses ditolak','error'); return; }
-  if(!confirm('Hapus kasus '+id+'? Tindakan ini tidak dapat dibatalkan.')) return;
-  const i = cases.findIndex(x=>x.id===id);
-  if(i>-1) {
-    cases.splice(i,1);
-    filteredCases=[...cases];
-    renderTable();
-    showToast('Kasus '+id+' dihapus','success');
-    addLog('DELETE','Menghapus kasus '+id);
+  const { error } = await supabase
+    .from('cases')
+    .insert([newCase]);
+
+  if (error) {
+    showToast('Gagal: ' + error.message,'error');
+  } else {
+    showToast('Data berhasil masuk database!','success');
+    closeModal('addModal');
+    loadData(); // reload dari Supabase
   }
 }
-
 function editStatus(id) {
   if(!hasPermission('editCase')) { showToast('Akses ditolak','error'); return; }
   const c=cases.find(x=>x.id===id);
@@ -4816,5 +4807,65 @@ function toggleSidebar() {
     <div class="modal-foot"><button class="btn btn-ghost" onclick="closeModal('dtEntryModal')">Batal</button><button class="btn btn-primary" onclick="saveDTEntry()">Simpan</button></div>
   </div>
 </div>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+const supabase = window.supabase.createClient(
+  "ISI_URL_KAMU",
+  "ISI_ANON_KEY_KAMU"
+);
+
+// LOAD DATA
+async function loadData() {
+  const { data, error } = await supabase
+    .from("cases")
+    .select("*")
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    console.log(error);
+    return;
+  }
+
+  let html = "";
+
+  data.forEach(item => {
+    html += `
+      <tr>
+        <td>${item.nama || "-"}</td>
+        <td>${item.kasus || "-"}</td>
+        <td>${item.status || "-"}</td>
+      </tr>
+    `;
+  });
+
+  const table = document.getElementById("dataTable");
+  if (table) table.innerHTML = html;
+}
+
+// SIMPAN DATA
+async function simpanData() {
+  const nama = document.getElementById("f_name")?.value || "";
+  const empid = document.getElementById("f_empid")?.value || "";
+
+  const { error } = await supabase
+    .from("cases")
+    .insert([{
+      nama: nama,
+      employee_id: empid,
+      status: "open"
+    }]);
+
+  if (error) {
+    alert("❌ Gagal: " + error.message);
+  } else {
+    alert("✅ Data masuk!");
+    loadData();
+  }
+}
+
+// jalan otomatis
+loadData();
+</script>
 </body>
 </html>
