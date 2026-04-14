@@ -1146,7 +1146,7 @@
         <input type="password" class="form-input" id="loginPass" placeholder="Masukkan password..." autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()">
       </div>
       <div class="login-err" id="loginErr">Username atau password salah.</div>
-      <button class="btn btn-primary" style="width:100%;justify-content:center;padding:10px" onclick="doLogin()">Masuk</button>
+       class="btn btn-primary" style="width:100%;justify-content:center;padding:10px" onclick="doLogin()">Masuk</button>
     </div>
     <div class="login-footer">© 2026 CaseTrack · Powered by Admin Master</div>
   </div>
@@ -1218,7 +1218,7 @@
       <div class="page-title" id="topbarTitle">Dashboard Kasus <span class="notif-dot"></span></div>
       <div class="page-sub" id="topbarSub">Kamis, 09 April 2026 · Periode: Q1–Q2 2026</div>
     </div>
-    <button class="menu-toggle" onclick="toggleSidebar()" title="Menu">☰</button>
+     class="menu-toggle" onclick="toggleSidebar()" title="Menu">☰</button>
     <div class="topbar-actions">
       <button class="topbar-icon-btn" title="Notifikasi">🔔</button>
       <button class="topbar-icon-btn" title="Export" onclick="exportCSV()">⤓</button>
@@ -4870,5 +4870,33 @@ function doLogin() {
   }
 }
 </script>
+  async function simpanKasus() {
+  const name = document.getElementById("f_name")?.value;
+  const empid = document.getElementById("f_empid")?.value;
+
+  if (!name) {
+    alert("Nama wajib diisi");
+    return;
+  }
+
+  console.log("KIRIM:", name, empid);
+
+  const { data, error } = await sb.from('cases').insert([
+    {
+      name: name,
+      status: "aktif"
+    }
+  ]);
+
+  console.log("HASIL:", data, error);
+
+  if (error) {
+    alert("❌ Gagal simpan");
+  } else {
+    alert("✅ Berhasil simpan");
+    closeModal('addModal');
+    loadCases();
+  }
+}
 </body>
 </html>
