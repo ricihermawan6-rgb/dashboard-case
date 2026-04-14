@@ -4836,17 +4836,10 @@ async function loadCases() {
     .select('*')
     .order('created_at', { ascending: false });
 
-  if (error) {
-    console.log("ERROR:", error);
-    alert("Error load data");
-    return;
-  }
+  console.log(data);
 
   const tbody = document.getElementById("tableBody");
-  if (!tbody) {
-    alert("tableBody tidak ditemukan");
-    return;
-  }
+  if (!tbody) return;
 
   tbody.innerHTML = "";
 
@@ -4869,14 +4862,14 @@ async function loadCases() {
 }
 
 // =====================
-// 🔥 INSERT TEST DATA
+// 🔥 TEST BUTTON
 // =====================
 async function testTambah() {
   const { error } = await supabase
     .from('cases')
     .insert([{
       case_id: 'CSE-' + Date.now(),
-      name: 'USER TEST',
+      name: 'TEST',
       type: 'Karyawan',
       category: 'Test',
       severity: 'Sedang',
@@ -4890,7 +4883,7 @@ async function testTambah() {
     console.log(error);
     alert("❌ GAGAL");
   } else {
-    alert("✅ MASUK DATABASE");
+    alert("✅ MASUK");
     loadCases();
   }
 }
@@ -4899,6 +4892,7 @@ async function testTambah() {
 // 🔥 AUTO LOAD
 // =====================
 window.onload = loadCases;
+
 </script>
 </body>
 </html>
