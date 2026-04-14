@@ -4816,5 +4816,50 @@ function toggleSidebar() {
     <div class="modal-foot"><button class="btn btn-ghost" onclick="closeModal('dtEntryModal')">Batal</button><button class="btn btn-primary" onclick="saveDTEntry()">Simpan</button></div>
   </div>
 </div>
+  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+
+<script>
+const sb = window.supabase.createClient(
+  "https://jpbbrqlcraxtnekkvdat.supabase.co",
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpwYmJycWxjcmF4dG5la2t2ZGF0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU4NDkxNTIsImV4cCI6MjA5MTQyNTE1Mn0.hY6vubnD9RS-iFsxZ0zsy5xVVnqhX6XtUOGY58NXJMY"
+);
+
+// LOAD
+async function loadCases() {
+  const { data } = await sb.from('cases').select('*');
+
+  const tbody = document.getElementById("tableBody");
+  if (!tbody) return;
+
+  tbody.innerHTML = "";
+
+  data?.forEach(d => {
+    tbody.innerHTML += `
+      <tr>
+        <td>${d.name}</td>
+        <td>${d.status}</td>
+        <td>${d.created_at}</td>
+      </tr>
+    `;
+  });
+}
+
+// TAMBAH
+async function tambahKasus() {
+  const name = prompt("Nama kasus:");
+  if (!name) return;
+
+  await sb.from('cases').insert([{ name, status: "aktif" }]);
+}
+
+// REALTIME
+sb.channel('cases')
+.on('postgres_changes',{event:'*',schema:'public',table:'cases'},()=>{
+  loadCases();
+})
+.subscribe();
+
+window.addEventListener("load", loadCases);
+</script>
 </body>
 </html>
