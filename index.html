@@ -1222,7 +1222,7 @@
     <div class="topbar-actions">
       <button class="topbar-icon-btn" title="Notifikasi">🔔</button>
       <button class="topbar-icon-btn" title="Export" onclick="exportCSV()">⤓</button>
-      <button class="btn btn-primary" onclick="openAddModal()" id="btnAddCase">+ Tambah Kasus</button>
+      <button class="btn btn-primary" onclick="tambahKasus()" id="btnAddCase">+ Tambah Kasus</button>
       <button class="btn btn-danger btn-sm" onclick="doLogout()" style="margin-left:4px">Keluar</button>
     </div>
   </div>
@@ -4848,11 +4848,30 @@ function toggleSidebar() {
 <script>
 const sb = window.supabase.createClient(
   "https://jpbbrqlcraxtnekkvdat.supabase.co",
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpwYmJycWxjcmF4dG5la2t2ZGF0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU4NDkxNTIsImV4cCI6MjA5MTQyNTE1Mn0.hY6vubnD9RS-iFsxZ0zsy5xVVnqhX6XtUOGY58NXJMY"
+  "KEY_KAMU"
 );
-</script>
-  <script>
-window.onload = loadCases;
+
+async function tambahKasus() {
+  const name = prompt("Masukkan nama:");
+
+  if (!name) return;
+
+  console.log("🔥 KLIK TAMBAH");
+
+  const { data, error } = await sb.from('cases').insert([
+    { name: name, status: "aktif" }
+  ]);
+
+  console.log("RESULT:", data, error);
+
+  if (error) {
+    alert("❌ GAGAL");
+    console.log(error);
+  } else {
+    alert("✅ MASUK DB");
+    loadCases();
+  }
+}
 </script>
 </body>
 </html>
