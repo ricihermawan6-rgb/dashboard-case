@@ -2554,7 +2554,7 @@ function doLogout() {
   showToast('Berhasil keluar','success');
 }
 
-function applyUserUI() {
+
   if(!currentUser) return;
   document.getElementById('sidebarUserName').textContent = currentUser.name;
   document.getElementById('sidebarUserRole').innerHTML = roleBadge(currentUser.role);
@@ -3803,7 +3803,7 @@ function showPage(pageId, navEl) {
 
 // patch nav visibility for bak & phk
 const _origApplyUserUI = applyUserUI;
-function applyUserUI() {
+
   _origApplyUserUI();
   // bak and phk visible for non-viewer
   const perms = permissions[currentUser.role] || {};
