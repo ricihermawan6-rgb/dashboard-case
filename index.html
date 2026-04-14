@@ -1220,6 +1220,7 @@
     </div>
     <button class="menu-toggle" onclick="toggleSidebar()" title="Menu">☰</button>
     <div class="topbar-actions">
+      <button onclick="testTambah()" class="btn btn-success">TEST DB</button>
       <button class="topbar-icon-btn" title="Notifikasi">🔔</button>
       <button class="topbar-icon-btn" title="Export" onclick="exportCSV()">⤓</button>
       <button class="btn btn-primary" onclick="openAddModal()" id="btnAddCase">+ Tambah Kasus</button>
@@ -4815,21 +4816,20 @@ function toggleSidebar() {
     <div class="modal-body" id="dtEntryBody"></div>
     <div class="modal-foot"><button class="btn btn-ghost" onclick="closeModal('dtEntryModal')">Batal</button><button class="btn btn-primary" onclick="saveDTEntry()">Simpan</button></div>
   </div>
-</div>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
-// ===============================
-// 🔥 SUPABASE CONFIG (SUDAH JADI)
-// ===============================
+// =====================
+// 🔥 CONNECT SUPABASE
+// =====================
 const supabase = window.supabase.createClient(
   "https://jpbbrqlcraxtnekkvdat.supabase.co",
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpwYmJycWxjcmF4dG5la2t2ZGF0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU4NDkxNTIsImV4cCI6MjA5MTQyNTE1Mn0.hY6vubnD9RS-iFsxZ0zsy5xVVnqhX6XtUOGY58NXJMY"
 );
 
-// ===============================
-// 🔥 LOAD DATA DARI DATABASE
-// ===============================
+// =====================
+// 🔥 LOAD DATA
+// =====================
 async function loadCases() {
   const { data, error } = await supabase
     .from('cases')
@@ -4837,58 +4837,68 @@ async function loadCases() {
     .order('created_at', { ascending: false });
 
   if (error) {
-    console.error("ERROR LOAD:", error);
+    console.log("ERROR:", error);
+    alert("Error load data");
     return;
   }
 
-  if (typeof renderTable === "function") {
-    renderTable(data);
+  const tbody = document.getElementById("tableBody");
+  if (!tbody) {
+    alert("tableBody tidak ditemukan");
+    return;
   }
 
-  console.log("DATA MASUK:", data);
+  tbody.innerHTML = "";
+
+  data.forEach(item => {
+    tbody.innerHTML += `
+      <tr>
+        <td>${item.case_id}</td>
+        <td>${item.name}</td>
+        <td>${item.type}</td>
+        <td>${item.category}</td>
+        <td>${item.severity}</td>
+        <td>${item.status}</td>
+        <td>${item.sp}</td>
+        <td>${item.report_date}</td>
+        <td>${item.updated_at}</td>
+        <td>-</td>
+      </tr>
+    `;
+  });
 }
 
-// ===============================
-// 🔥 TAMBAH DATA
-// ===============================
-async function tambahKasusBaru() {
-  const dummy = {
-    case_id: "CSE-" + Date.now(),
-    name: "Test User",
-    type: "Karyawan",
-    category: "Pelanggaran",
-    severity: "Sedang",
-    status: "Aktif",
-    sp: "-",
-    report_date: new Date().toISOString(),
-    updated_at: new Date().toISOString()
-  };
-
+// =====================
+// 🔥 INSERT TEST DATA
+// =====================
+async function testTambah() {
   const { error } = await supabase
     .from('cases')
-    .insert([dummy]);
+    .insert([{
+      case_id: 'CSE-' + Date.now(),
+      name: 'USER TEST',
+      type: 'Karyawan',
+      category: 'Test',
+      severity: 'Sedang',
+      status: 'Aktif',
+      sp: '-',
+      report_date: new Date().toISOString(),
+      updated_at: new Date().toISOString()
+    }]);
 
   if (error) {
-    alert("❌ Gagal tambah data");
     console.log(error);
+    alert("❌ GAGAL");
   } else {
-    alert("✅ Data masuk database!");
+    alert("✅ MASUK DATABASE");
     loadCases();
   }
 }
 
-// ===============================
-// 🔥 AUTO LOAD SAAT BUKA
-// ===============================
-window.addEventListener("load", () => {
-  loadCases();
-});
-
-// ===============================
-// 🔥 TEST BUTTON (OPSIONAL)
-// ===============================
-window.testTambah = tambahKasusBaru;
-
+// =====================
+// 🔥 AUTO LOAD
+// =====================
+window.onload = loadCases;
 </script>
 </body>
 </html>
