@@ -1295,6 +1295,33 @@
             </tr>
           </thead>
           <tbody id="tableBody"></tbody>
+          <script>
+async function loadCases() {
+  const { data } = await sb.from('cases').select('*');
+
+  const tbody = document.getElementById("tableBody");
+  if (!tbody) return;
+
+  tbody.innerHTML = "";
+
+  data.forEach(item => {
+    tbody.innerHTML += `
+      <tr>
+        <td>-</td>
+        <td>${item.name}</td>
+        <td>-</td>
+        <td>-</td>
+        <td>-</td>
+        <td>${item.status}</td>
+        <td>-</td>
+        <td>-</td>
+        <td>${item.created_at}</td>
+        <td>-</td>
+      </tr>
+    `;
+  });
+}
+</script>
         </table>
       </div>
 
@@ -4816,5 +4843,17 @@ function toggleSidebar() {
     <div class="modal-foot"><button class="btn btn-ghost" onclick="closeModal('dtEntryModal')">Batal</button><button class="btn btn-primary" onclick="saveDTEntry()">Simpan</button></div>
   </div>
 </div>
+  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+
+<script>
+const sb = window.supabase.createClient(
+  "https://jpbbrqlcraxtnekkvdat.supabase.co",
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpwYmJycWxjcmF4dG5la2t2ZGF0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU4NDkxNTIsImV4cCI6MjA5MTQyNTE1Mn0.hY6vubnD9RS-iFsxZ0zsy5xVVnqhX6XtUOGY58NXJMY"
+);
+</script>
+  <script>
+window.onload = loadCases;
+</script>
+
 </body>
 </html>
