@@ -2537,7 +2537,6 @@ function doLogin() {
   if(!found) { document.getElementById('loginErr').style.display='block'; return; }
   currentUser = found;
   document.getElementById('loginScreen').style.display='none';
-  applyUserUI();
   initApp();
   showToast('Selamat datang, '+found.name+'!','success');
   addLog('LOGIN','User login berhasil');
@@ -2553,7 +2552,7 @@ function doLogout() {
   showToast('Berhasil keluar','success');
 }
 
-function applyUserUI() {
+function () {
   if(!currentUser) return;
   document.getElementById('sidebarUserName').textContent = currentUser.name;
   document.getElementById('sidebarUserRole').innerHTML = roleBadge(currentUser.role);
@@ -3801,9 +3800,6 @@ function showPage(pageId, navEl) {
 }
 
 // patch nav visibility for bak & phk
-const _origApplyUserUI = applyUserUI;
-function applyUserUI() {
-  _origApplyUserUI();
   // bak and phk visible for non-viewer
   const perms = permissions[currentUser.role] || {};
   const bakNav = document.getElementById('nav-bak');
