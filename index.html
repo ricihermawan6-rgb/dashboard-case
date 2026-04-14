@@ -4816,66 +4816,65 @@ function toggleSidebar() {
     <div class="modal-body" id="dtEntryBody"></div>
     <div class="modal-foot"><button class="btn btn-ghost" onclick="closeModal('dtEntryModal')">Batal</button><button class="btn btn-primary" onclick="saveDTEntry()">Simpan</button></div>
   </div>
-  <script src="https://cdn.jsdelivr.net/npm/@sb/sb-js@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
-// =====================
-const sb = window.sb.createClient(
-  "https://jpbbrqlcraxtnekkvdat.sb.co",
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
-);
+window.addEventListener("load", () => {
 
-// =====================
-async function loadCases() {
-  const { data } = await sb.from('cases').select('*');
+  const sb = window.supabase.createClient(
+    "https://jpbbrqlcraxtnekkvdat.supabase.co",
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpwYmJycWxjcmF4dG5la2t2ZGF0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU4NDkxNTIsImV4cCI6MjA5MTQyNTE1Mn0.hY6vubnD9RS-iFsxZ0zsy5xVVnqhX6XtUOGY58NXJMY"
+  );
 
-  const tbody = document.getElementById("tableBody");
-  if (!tbody) return;
+  async function loadCases() {
+    const { data } = await sb.from('cases').select('*');
 
-  tbody.innerHTML = "";
+    const tbody = document.getElementById("tableBody");
+    if (!tbody) return;
 
-  data.forEach(item => {
-    tbody.innerHTML += `
-      <tr>
-        <td>${item.case_id}</td>
-        <td>${item.name}</td>
-        <td>${item.type}</td>
-        <td>${item.category}</td>
-        <td>${item.severity}</td>
-        <td>${item.status}</td>
-        <td>${item.sp}</td>
-        <td>${item.report_date}</td>
-        <td>${item.updated_at}</td>
-        <td>-</td>
-      </tr>
-    `;
-  });
-}
+    tbody.innerHTML = "";
 
-// =====================
-async function testTambah() {
-  const { error } = await sb.from('cases').insert([{
-    case_id: 'CSE-' + Date.now(),
-    name: 'TEST',
-    type: 'Karyawan',
-    category: 'Test',
-    severity: 'Sedang',
-    status: 'Aktif',
-    sp: '-',
-    report_date: new Date().toISOString(),
-    updated_at: new Date().toISOString()
-  }]);
-
-  if (!error) {
-    alert("✅ MASUK");
-    loadCases();
-  } else {
-    console.log(error);
+    data.forEach(item => {
+      tbody.innerHTML += `
+        <tr>
+          <td>${item.case_id}</td>
+          <td>${item.name}</td>
+          <td>${item.type}</td>
+          <td>${item.category}</td>
+          <td>${item.severity}</td>
+          <td>${item.status}</td>
+          <td>${item.sp}</td>
+          <td>${item.report_date}</td>
+          <td>${item.updated_at}</td>
+          <td>-</td>
+        </tr>
+      `;
+    });
   }
-}
 
-// =====================
-window.onload = loadCases;
+  window.testTambah = async function () {
+    const { error } = await sb.from('cases').insert([{
+      case_id: 'CSE-' + Date.now(),
+      name: 'TEST',
+      type: 'Karyawan',
+      category: 'Test',
+      severity: 'Sedang',
+      status: 'Aktif',
+      sp: '-',
+      report_date: new Date().toISOString(),
+      updated_at: new Date().toISOString()
+    }]);
+
+    if (!error) {
+      alert("✅ MASUK");
+      loadCases();
+    } else {
+      console.log(error);
+    }
+  }
+
+  loadCases();
+});
 </script>
 </body>
 </html>
