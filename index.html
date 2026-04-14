@@ -4816,5 +4816,206 @@ function toggleSidebar() {
     <div class="modal-foot"><button class="btn btn-ghost" onclick="closeModal('dtEntryModal')">Batal</button><button class="btn btn-primary" onclick="saveDTEntry()">Simpan</button></div>
   </div>
 </div>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+
+<script>
+const supabaseClient = supabase.createClient(
+  "https://PROJECT_LO.supabase.co",
+  "ANON_KEY_LO"
+);
+
+// ================= LOGIN REAL =================
+async function doLogin() {
+  const email = document.getElementById("loginUser").value;
+  const password = document.getElementById("loginPass").value;
+
+  const { error } = await supabaseClient.auth.signInWithPassword({
+    email,
+    password
+  });
+
+  if (error) {
+    document.getElementById("loginErr").style.display = "block";
+  } else {
+    document.getElementById("loginScreen").style.display = "none";
+    initApp();
+  }
+}
+
+// ================= INIT =================
+function initApp() {
+  loadCases();
+  setupRealtime();
+}
+
+// ================= LOAD DATA =================
+async function loadCases() {
+  const { data, error } = await supabaseClient
+    .from("cases")
+    .select("*")
+    .order("created_at", { ascending: false });
+
+  if (!error) {
+    renderTable(data); // fungsi lo tetap dipakai
+  }
+}
+
+// ================= TAMBAH KASUS =================
+async function saveCase() {
+  const data = {
+    name: document.getElementById("empName").value,
+    emp_id: document.getElementById("empId").value,
+    dept: document.getElementById("dept").value,
+    case_type: document.getElementById("caseType").value,
+    severity: document.getElementById("severity").value,
+    status: "Aktif",
+    created_at: new Date()
+  };
+
+  await supabaseClient.from("cases").insert([data]);
+
+  loadCases();
+}
+
+// ================= DELETE =================
+async function deleteCase(id) {
+  await supabaseClient.from("cases").delete().eq("id", id);
+}
+
+// ================= REALTIME =================
+function setupRealtime() {
+  supabaseClient
+    .channel("cases")
+    .on("postgres_changes", {
+      event: "*",
+      schema: "public",
+      table: "cases"
+    }, () => {
+      loadCases();
+    })
+    .subscribe();
+}
+
+// ================= AUTO  CHECK =================
+async function checkUser() {
+  const { data } = await supabaseClient.auth.getUser();
+  if (data.user) {
+    document.getElementById("loginScreen").style.display = "none";
+    initApp();
+  }
+}
+
+checkUser();
+  <script>
+async function doLogin() {
+  const email = document.getElementById("loginUser").value;
+  const password = document.getElementById("loginPass").value;
+
+  const { error } = await supabaseClient.auth.signInWithPassword({
+    email,
+    password
+  });
+
+  if (error) {
+    alert("Login gagal: " + error.message);
+  } else {
+    document.getElementById("loginScreen").style.display = "none";
+    initApp();
+  }
+}
+</script>
+</script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+
+<script>
+const supabaseClient = supabase.createClient(
+  "https://jpbbcrqlcraxxtnekkvdat.supabase.co",
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpwYmJycWxjcmF4dG5la2t2ZGF0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU4NDkxNTIsImV4cCI6MjA5MTQyNTE1Mn0.hY6vubnD9RS-iFsxZ0zsy5xVVnqhX6XtUOGY58NXJMY"
+);
+
+// ================= LOGIN =================
+async function doLogin() {
+  const email = document.getElementById("loginUser").value;
+  const password = document.getElementById("loginPass").value;
+
+  const { error } = await supabaseClient.auth.signInWithPassword({
+    email,
+    password
+  });
+
+  if (error) {
+    document.getElementById("loginErr").style.display = "block";
+  } else {
+    document.getElementById("loginScreen").style.display = "none";
+    initApp();
+  }
+}
+
+// ================= LOGOUT =================
+async function doLogout() {
+  await supabaseClient.auth.signOut();
+  location.reload();
+}
+
+// ================= INIT =================
+function initApp() {
+  loadCases();
+  setupRealtime();
+}
+
+// ================= LOAD DATA =================
+async function loadCases() {
+  const { data } = await supabaseClient
+    .from("cases")
+    .select("*")
+    .order("created_at", { ascending: false });
+
+  if (data) {
+    renderTable(data); // fungsi lo tetap dipakai
+  }
+}
+
+// ================= TAMBAH DATA =================
+async function saveCase() {
+  const data = {
+    name: document.getElementById("empName").value,
+    emp_id: document.getElementById("empId").value,
+    dept: document.getElementById("dept").value,
+    case_type: document.getElementById("caseType").value,
+    severity: document.getElementById("severity").value,
+    status: "Aktif"
+  };
+
+  await supabaseClient.from("cases").insert([data]);
+}
+
+// ================= DELETE =================
+async function deleteCase(id) {
+  await supabaseClient.from("cases").delete().eq("id", id);
+}
+
+// ================= REALTIME =================
+function setupRealtime() {
+  supabaseClient
+    .channel("cases")
+    .on("postgres_changes",
+      { event: "*", schema: "public", table: "cases" },
+      () => loadCases()
+    )
+    .subscribe();
+}
+
+// ================= AUTO LOGIN =================
+async function checkUser() {
+  const { data } = await supabaseClient.auth.getUser();
+
+  if (data.user) {
+    document.getElementById("loginScreen").style.display = "none";
+    initApp();
+  }
+}
+
+checkUser();
+</script>
 </body>
 </html>
