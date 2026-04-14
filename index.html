@@ -4816,5 +4816,79 @@ function toggleSidebar() {
     <div class="modal-foot"><button class="btn btn-ghost" onclick="closeModal('dtEntryModal')">Batal</button><button class="btn btn-primary" onclick="saveDTEntry()">Simpan</button></div>
   </div>
 </div>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+// ===============================
+// 🔥 SUPABASE CONFIG (SUDAH JADI)
+// ===============================
+const supabase = window.supabase.createClient(
+  "https://jpbbrqlcraxtnekkvdat.supabase.co",
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpwYmJycWxjcmF4dG5la2t2ZGF0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU4NDkxNTIsImV4cCI6MjA5MTQyNTE1Mn0.hY6vubnD9RS-iFsxZ0zsy5xVVnqhX6XtUOGY58NXJMY"
+);
+
+// ===============================
+// 🔥 LOAD DATA DARI DATABASE
+// ===============================
+async function loadCases() {
+  const { data, error } = await supabase
+    .from('cases')
+    .select('*')
+    .order('created_at', { ascending: false });
+
+  if (error) {
+    console.error("ERROR LOAD:", error);
+    return;
+  }
+
+  if (typeof renderTable === "function") {
+    renderTable(data);
+  }
+
+  console.log("DATA MASUK:", data);
+}
+
+// ===============================
+// 🔥 TAMBAH DATA
+// ===============================
+async function tambahKasusBaru() {
+  const dummy = {
+    case_id: "CSE-" + Date.now(),
+    name: "Test User",
+    type: "Karyawan",
+    category: "Pelanggaran",
+    severity: "Sedang",
+    status: "Aktif",
+    sp: "-",
+    report_date: new Date().toISOString(),
+    updated_at: new Date().toISOString()
+  };
+
+  const { error } = await supabase
+    .from('cases')
+    .insert([dummy]);
+
+  if (error) {
+    alert("❌ Gagal tambah data");
+    console.log(error);
+  } else {
+    alert("✅ Data masuk database!");
+    loadCases();
+  }
+}
+
+// ===============================
+// 🔥 AUTO LOAD SAAT BUKA
+// ===============================
+window.addEventListener("load", () => {
+  loadCases();
+});
+
+// ===============================
+// 🔥 TEST BUTTON (OPSIONAL)
+// ===============================
+window.testTambah = tambahKasusBaru;
+
+</script>
 </body>
 </html>
