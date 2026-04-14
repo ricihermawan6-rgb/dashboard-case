@@ -2552,7 +2552,7 @@ function doLogout() {
   showToast('Berhasil keluar','success');
 }
 
-function () {
+function namaFunction() {
   if(!currentUser) return;
   document.getElementById('sidebarUserName').textContent = currentUser.name;
   document.getElementById('sidebarUserRole').innerHTML = roleBadge(currentUser.role);
@@ -4856,6 +4856,19 @@ sb.channel('cases')
 .subscribe();
 
 window.addEventListener("load", loadCases);
+</script>
+  <script>
+function doLogin() {
+  const user = document.getElementById("loginUser")?.value;
+  const pass = document.getElementById("loginPass")?.value;
+
+  if (user === "admin" && pass === "admin") {
+    document.getElementById("loginScreen").style.display = "none";
+    document.getElementById("app").style.display = "block";
+  } else {
+    alert("Login salah");
+  }
+}
 </script>
 </body>
 </html>
