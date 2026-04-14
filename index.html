@@ -4820,23 +4820,14 @@ function toggleSidebar() {
 
 <script>
 // =====================
-// 🔥 CONNECT SUPABASE
-// =====================
 const supabase = window.supabase.createClient(
   "https://jpbbrqlcraxtnekkvdat.supabase.co",
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpwYmJycWxjcmF4dG5la2t2ZGF0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU4NDkxNTIsImV4cCI6MjA5MTQyNTE1Mn0.hY6vubnD9RS-iFsxZ0zsy5xVVnqhX6XtUOGY58NXJMY"
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
 );
 
 // =====================
-// 🔥 LOAD DATA
-// =====================
 async function loadCases() {
-  const { data, error } = await supabase
-    .from('cases')
-    .select('*')
-    .order('created_at', { ascending: false });
-
-  console.log(data);
+  const { data } = await supabase.from('cases').select('*');
 
   const tbody = document.getElementById("tableBody");
   if (!tbody) return;
@@ -4862,37 +4853,29 @@ async function loadCases() {
 }
 
 // =====================
-// 🔥 TEST BUTTON
-// =====================
 async function testTambah() {
-  const { error } = await supabase
-    .from('cases')
-    .insert([{
-      case_id: 'CSE-' + Date.now(),
-      name: 'TEST',
-      type: 'Karyawan',
-      category: 'Test',
-      severity: 'Sedang',
-      status: 'Aktif',
-      sp: '-',
-      report_date: new Date().toISOString(),
-      updated_at: new Date().toISOString()
-    }]);
+  const { error } = await supabase.from('cases').insert([{
+    case_id: 'CSE-' + Date.now(),
+    name: 'TEST',
+    type: 'Karyawan',
+    category: 'Test',
+    severity: 'Sedang',
+    status: 'Aktif',
+    sp: '-',
+    report_date: new Date().toISOString(),
+    updated_at: new Date().toISOString()
+  }]);
 
-  if (error) {
-    console.log(error);
-    alert("❌ GAGAL");
-  } else {
+  if (!error) {
     alert("✅ MASUK");
     loadCases();
+  } else {
+    console.log(error);
   }
 }
 
 // =====================
-// 🔥 AUTO LOAD
-// =====================
 window.onload = loadCases;
-
 </script>
 </body>
 </html>
