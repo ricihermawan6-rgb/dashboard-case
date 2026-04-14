@@ -4875,5 +4875,19 @@ window.addEventListener("load", () => {
   loadCases();
 });
 </script>
+  <script>
+function doLogin() {
+  const user = document.getElementById("loginUser").value;
+  const pass = document.getElementById("loginPass").value;
+
+  if (user === "admin" && pass === "admin") {
+    document.getElementById("loginScreen").style.display = "none";
+    console.log("✅ LOGIN BERHASIL");
+  } else {
+    document.getElementById("loginErr").style.display = "block";
+    console.log("❌ LOGIN GAGAL");
+  }
+}
+</script>
 </body>
 </html>
