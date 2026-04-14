@@ -4816,18 +4816,18 @@ function toggleSidebar() {
     <div class="modal-body" id="dtEntryBody"></div>
     <div class="modal-foot"><button class="btn btn-ghost" onclick="closeModal('dtEntryModal')">Batal</button><button class="btn btn-primary" onclick="saveDTEntry()">Simpan</button></div>
   </div>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@sb/sb-js@2"></script>
 
 <script>
 // =====================
-const supabase = window.supabase.createClient(
-  "https://jpbbrqlcraxtnekkvdat.supabase.co",
+const sb = window.sb.createClient(
+  "https://jpbbrqlcraxtnekkvdat.sb.co",
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
 );
 
 // =====================
 async function loadCases() {
-  const { data } = await supabase.from('cases').select('*');
+  const { data } = await sb.from('cases').select('*');
 
   const tbody = document.getElementById("tableBody");
   if (!tbody) return;
@@ -4854,7 +4854,7 @@ async function loadCases() {
 
 // =====================
 async function testTambah() {
-  const { error } = await supabase.from('cases').insert([{
+  const { error } = await sb.from('cases').insert([{
     case_id: 'CSE-' + Date.now(),
     name: 'TEST',
     type: 'Karyawan',
