@@ -1638,15 +1638,11 @@ if (!userId) {
   return
 }
 
-const { error: profErr } = await sb.from('profiles').insert([
+const { error: profErr } = await sb.from('users').insert([
   {
     id: userId,
-    name: name,
     email: email,
-    username: val('nu_username') || email.split('@')[0],
-    role: val('nu_role') || 'viewer',
-    dept: val('nu_dept'),
-    active: true
+    role: val('nu_role') || 'viewer'
   }
 ])
   if(profErr){ toast('Gagal simpan profil: '+profErr.message,'error'); return; }
