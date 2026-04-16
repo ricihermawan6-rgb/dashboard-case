@@ -1587,7 +1587,6 @@ async function loadUsers(){
   renderUsers();
   updateSysStats();
 }
-
 function renderUsers(){
   $('userCount').textContent = allUsers.length + ' user';
   $('userTable').innerHTML = allUsers.length ? allUsers.map(u=>`
@@ -1626,17 +1625,30 @@ async function addUser(){
     email, password:pass,
     options:{ data:{ name } }
   });
+
+  console.log('AUTH DATA:', authData);
+console.log('AUTH ERROR:', authErr);
   if(authErr){ toast('Gagal buat user: '+authErr.message,'error'); return; }
 
   // Insert profile
-  const {error:profErr} = await sb.from('profiles').insert({
-    id: authData.user.id,
-    name, email,
-    username: val('nu_username')||email.split('@')[0],
-    role: val('nu_role')||'viewer',
+const userId = authData?.user?.id
+
+if (!userId) {
+  toast('User tidak terbentuk (cek email confirmation setting)', 'error')
+  return
+}
+
+const { error: profErr } = await sb.from('profiles').insert([
+  {
+    id: userId,
+    name: name,
+    email: email,
+    username: val('nu_username') || email.split('@')[0],
+    role: val('nu_role') || 'viewer',
     dept: val('nu_dept'),
     active: true
-  });
+  }
+])
   if(profErr){ toast('Gagal simpan profil: '+profErr.message,'error'); return; }
 
   toast('User '+name+' berhasil dibuat');
