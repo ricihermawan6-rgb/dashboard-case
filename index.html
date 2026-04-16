@@ -1629,16 +1629,20 @@ async function addUser(){
   if(authErr){ toast('Gagal buat user: '+authErr.message,'error'); return; }
 
   // Insert profile
-  const {error:profErr} = await sb.from('profiles').insert({
+const { error: profErr } = await sb.from('profiles').insert([
+  {
     id: authData.user.id,
-    name, email,
-    username: val('nu_username')||email.split('@')[0],
-    role: val('nu_role')||'viewer',
+    name: name,
+    email: email,
+    username: val('nu_username') || email.split('@')[0] + Date.now(),
+    role: val('nu_role') || 'viewer',
     dept: val('nu_dept'),
     active: true
-  });
-  if(profErr){ toast('Gagal simpan profil: '+profErr.message,'error'); return; }
-
+  }
+])
+  if(profErr){ toast('Gagal simpan profil: '+profErr.message,'error'); return; 
+  }
+  
   toast('User '+name+' berhasil dibuat');
   await addLog('CREATE','Tambah user: '+name+' ('+email+')');
   closeModal('addUserModal');
