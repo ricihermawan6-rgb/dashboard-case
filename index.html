@@ -1726,6 +1726,9 @@ window.addEventListener('load', async function(){
     <div class="modal-foot"><button class="btn btn-ghost" onclick="closeModal('editUserModal')">Batal</button><button class="btn btn-primary" onclick="saveUser()">💾 Simpan</button></div>
   </div>
 </div>
-
+  const { data, error } = await supabase.auth.signInWithPassword({
+  email: emailInput,
+  password: passwordInput
+})
 </body>
 </html>
