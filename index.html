@@ -1726,9 +1726,117 @@ window.addEventListener('load', async function(){
     <div class="modal-foot"><button class="btn btn-ghost" onclick="closeModal('editUserModal')">Batal</button><button class="btn btn-primary" onclick="saveUser()">💾 Simpan</button></div>
   </div>
 </div>
+  <!-- SCRIPT SUPABASE -->
+<script>
+const supabaseUrl = "https://atorjhxwokqghfkykqeg.supabase.co"
+const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF0b3JqaHh3b2txZ2hma3lrcWVnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU3NDA1ODgsImV4cCI6MjA5MTMxNjU4OH0.-Bjdrs87-CAdCdRMISB86z2sotfK4lb6phn2Zoad86E"
+
+const supabase = window.supabase.createClient(supabaseUrl, supabaseKey)
+
+// ================= LOGIN =================
+async function doLogin() {
+  const email = document.getElementById("loginEmail").value
+  const password = document.getElementById("loginPass").value
+  const errBox = document.getElementById("loginErr")
+
+  if (!email || !password) {
+    errBox.style.display = "block"
+    errBox.innerText = "Wajib isi semua"
+    return
+  }
+
   const { data, error } = await supabase.auth.signInWithPassword({
-  email: emailInput,
-  password: passwordInput
-})
+    email,
+    password
+  })
+
+  if (error) {
+    errBox.style.display = "block"
+    errBox.innerText = error.message
+    return
+  }
+
+  document.getElementById("loginScreen").style.display = "none"
+  document.getElementById("appShell").style.display = "flex"
+
+  loadDashboard()
+}
+
+// ================= SESSION =================
+async function checkSession() {
+  const { data } = await supabase.auth.getSession()
+
+  if (data.session) {
+    document.getElementById("loginScreen").style.display = "none"
+    document.getElementById("appShell").style.display = "flex"
+    loadDashboard()
+  }
+}
+
+checkSession()
+
+// ================= LOAD DATA =================
+async function loadDashboard() {
+  const { data, error } = await supabase
+    .from("cases")
+    .select("*")
+
+  if (error) {
+    console.error(error)
+    return
+  }
+
+  document.getElementById("statActive").innerText = data.length
+
+  let html = ""
+  data.forEach(c => {
+    html += `
+      <tr>
+        <td>${c.id}</td>
+        <td>${c.name}</td>
+        <td>${c.casetype || "-"}</td>
+        <td>${c.severity}</td>
+        <td>${c.status}</td>
+        <td>${c.sp || "-"}</td>
+        <td>${c.created_at?.split("T")[0]}</td>
+      </tr>
+    `
+  })
+
+  document.getElementById("dashTable").innerHTML = html
+}
+
+// ================= INSERT =================
+async function addCase() {
+  const {
+    data: { user }
+  } = await supabase.auth.getUser()
+
+  const name = document.getElementById("ac_name").value
+  const emp_id = document.getElementById("ac_empid").value
+
+  const { error } = await supabase
+    .from("cases")
+    .insert([
+      {
+        id: "CASE-" + Date.now(),
+        name,
+        emp_id,
+        status: "Aktif",
+        created_by: user.id
+      }
+    ])
+
+  if (error) {
+    alert(error.message)
+  } else {
+    alert("Berhasil tambah kasus")
+    loadDashboard()
+  }
+}
+</script>
+
+</body>
+</html>
 </body>
 </html>
