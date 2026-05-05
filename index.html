@@ -1238,51 +1238,68 @@ const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 </script>
 let sbProfile = null; // Supabase profile of logged in user
-
-// ============================================================
-// OVERRIDE doLogin — use Supabase Auth
-// ============================================================
+<script>
 async function doLogin() {
-  const email = document.getElementById('loginUser').value.trim();
-  const pass  = document.getElementById('loginPass').value;
+  const email = document.getElementById('username').value.trim();
+  const pass  = document.getElementById('password').value;
   const errEl = document.getElementById('loginErr');
 
-  if (!email || !pass) { errEl.style.display='block'; errEl.textContent='Isi email dan password'; return; }
+  console.log("EMAIL:", email);
+  console.log("PASS:", pass);
 
-  const loginBtn = document.querySelector('.btn-primary[onclick*="doLogin"], button[onclick*="doLogin"]');
-  if (loginBtn) { loginBtn.textContent = 'Memuat...'; loginBtn.disabled = true; }
-  errEl.style.display = 'none';
-
-  const { data, error } = await sb.auth.signInWithPassword({ email, password: pass });
-
-  if (error) {
-    errEl.style.display = 'block';
-    errEl.textContent = 'Email atau password salah';
-    if (loginBtn) { loginBtn.textContent = 'Masuk'; loginBtn.disabled = false; }
+  if (!email || !pass) {
+    errEl.style.display='block';
+    errEl.textContent='Isi email dan password';
     return;
   }
 
-  // Load profile
-  const { data: prof } = await sb.from('profiles').select('*').eq('id', data.user.id).single();
+  const btn = document.querySelector('.btn-primary');
+  if (btn) {
+    btn.textContent = 'Memuat...';
+    btn.disabled = true;
+  }
+
+  errEl.style.display = 'none';
+
+  const { data, error } = await sb.auth.signInWithPassword({
+    email: email,
+    password: pass
+  });
+
+  console.log("LOGIN RESULT:", data, error);
+
+  if (error) {
+    errEl.style.display = 'block';
+    errEl.textContent = error.message;
+    if (btn) {
+      btn.textContent = 'Masuk';
+      btn.disabled = false;
+    }
+    return;
+  }
+
+  // ambil profile
+  const { data: prof } = await sb
+    .from('profiles')
+    .select('*')
+    .eq('id', data.user.id)
+    .single();
+
   if (!prof) {
     errEl.style.display = 'block';
-    errEl.textContent = 'Akun belum terdaftar. Hubungi admin.';
-    if (loginBtn) { loginBtn.textContent = 'Masuk'; loginBtn.disabled = false; }
-    await sb.auth.signOut();
+    errEl.textContent = 'User tidak ditemukan di database';
     return;
   }
 
   sbProfile = prof;
-  currentUser = { id: prof.id, name: prof.name, username: prof.username || email.split('@')[0], role: prof.role, dept: prof.dept, email: prof.email, active: prof.active, photo: prof.photo_url || null };
-  await sb.from('profiles').update({ last_login: new Date().toISOString() }).eq('id', data.user.id);
 
   document.getElementById('loginScreen').style.display = 'none';
-  applyUserUI();
-  initApp();
-  showToast('Selamat datang, ' + prof.name + '!', 'success');
-  sbAddLog('LOGIN', 'Login berhasil');
-}
 
+  initApp();
+
+  alert("Login berhasil!");
+}
+</script>
 async function doLogout() {
   if (!confirm('Yakin ingin keluar?')) return;
   await sb.auth.signOut();
