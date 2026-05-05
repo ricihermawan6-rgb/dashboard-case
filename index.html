@@ -5877,5 +5877,17 @@ window.openSPDetailModal = async function(id) {
     <div class="modal-foot"><button class="btn btn-ghost" onclick="closeModal('dtEntryModal')">Batal</button><button class="btn btn-primary" onclick="saveDTEntry()">Simpan</button></div>
   </div>
 </div>
+  <script>
+document.addEventListener("DOMContentLoaded", () => {
+  const btn = document.querySelector(".btn-primary");
+
+  if (btn) {
+    btn.onclick = doLogin;
+    console.log("✅ Tombol login berhasil dikaitkan ke doLogin()");
+  } else {
+    console.log("❌ Tombol login tidak ditemukan");
+  }
+});
+</script>
 </body>
 </html>
