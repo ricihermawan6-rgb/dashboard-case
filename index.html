@@ -1225,7 +1225,21 @@
     font-weight: 600;
   }
 </style>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
+<!-- 1. LOAD SUPABASE -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<!-- 2. SCRIPT LO -->
+<script>
+
+// ============================================================
+// SUPABASE CONFIG
+// ============================================================
+const SUPABASE_URL = 'https://atorjhxwokqghfkykqeg.supabase.co';
+const SUPABASE_KEY = 'PASTE_KEY_LO';
+
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+// kode lo lanjut di sini...
 
 // ============================================================
 // SUPABASE CONFIG
